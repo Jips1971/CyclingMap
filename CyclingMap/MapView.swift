@@ -33,42 +33,35 @@ struct MapView: UIViewRepresentable {
     func updateUIView(_ uiView: MKMapView, context: Context) {
         guard let location = locationManager.currentLocation else { return }
 
-        // Determine heading (course when moving, compass when slow)
+        // Use GPS course when moving, freeze when stopped
         let heading: CLLocationDirection
-        if directionUp {
-            if location.speed > 0.5 {
-                heading = location.course >= 0 ? location.course : uiView.camera.heading
-            } else {
-                heading = locationManager.compassHeading
-            }
+        if location.speed > 0.5 {
+            heading = location.course >= 0 ? location.course : uiView.camera.heading
         } else {
-            heading = 0
+            heading = uiView.camera.heading   // keep last heading
         }
 
-        // FIXED CAMERA — only update position + heading, NEVER zoom
+        // Direction-up camera (rotates with movement only)
         let camera = MKMapCamera(
             lookingAtCenter: location.coordinate,
-            fromDistance: 900,   // FIXED ZOOM LEVEL
+            fromDistance: 900,
             pitch: 60,
             heading: heading
         )
-
         uiView.setCamera(camera, animated: false)
 
-        // Draw trail polyline
+        // Trail polyline
         let coords = locationManager.pathCoordinates
         if coords.count > 1 {
-            // Remove ONLY old polylines (not user location)
-            uiView.overlays.forEach { overlay in
-                if overlay is MKPolyline {
-                    uiView.removeOverlay(overlay)
-                }
-            }
+            uiView.overlays
+                .compactMap { $0 as? MKPolyline }
+                .forEach { uiView.removeOverlay($0) }
 
             let polyline = MKPolyline(coordinates: coords, count: coords.count)
             uiView.addOverlay(polyline)
         }
     }
+
 
     // MARK: - Coordinator
     class Coordinator: NSObject, MKMapViewDelegate {

@@ -8,21 +8,26 @@ class LocationManager: NSObject, ObservableObject {
     @Published var currentLocation: CLLocation?
     @Published var speedKmh: Double = 0
     @Published var pathCoordinates: [CLLocationCoordinate2D] = []
-    @Published var distanceTravelled: Double = 0   // meters
+    @Published var distanceTravelled: Double = 0
     @Published var compassHeading: CLLocationDirection = 0
 
     override init() {
         super.init()
+
         manager.delegate = self
         manager.desiredAccuracy = kCLLocationAccuracyBest
         manager.activityType = .fitness
-        manager.allowsBackgroundLocationUpdates = true
-        manager.activityType = .automotiveNavigation
         manager.pausesLocationUpdatesAutomatically = false
-        manager.requestWhenInUseAuthorization()
 
-        manager.startUpdatingLocation()
-        manager.startUpdatingHeading()   // ← enables rotation based on phone orientation
+        // Request Always permission (required for background tracking)
+        manager.requestAlwaysAuthorization()
+
+        // Background updates MUST be enabled on the main thread
+        DispatchQueue.main.async {
+            self.manager.allowsBackgroundLocationUpdates = true
+            self.manager.startUpdatingLocation()
+            self.manager.startUpdatingHeading()   // arrow orientation only
+        }
     }
 
     func resetTrip() {
@@ -32,6 +37,18 @@ class LocationManager: NSObject, ObservableObject {
 }
 
 extension LocationManager: CLLocationManagerDelegate {
+
+    // Optional: start updates once authorized
+    func locationManager(_ manager: CLLocationManager,
+                         didChangeAuthorization status: CLAuthorizationStatus) {
+
+        if status == .authorizedAlways || status == .authorizedWhenInUse {
+            DispatchQueue.main.async {
+                self.manager.startUpdatingLocation()
+                self.manager.startUpdatingHeading()
+            }
+        }
+    }
 
     func locationManager(_ manager: CLLocationManager,
                          didUpdateLocations locations: [CLLocation]) {
@@ -54,7 +71,7 @@ extension LocationManager: CLLocationManagerDelegate {
             let current = CLLocation(latitude: pathCoordinates[lastIndex].latitude,
                                      longitude: pathCoordinates[lastIndex].longitude)
 
-            let segmentDistance = current.distance(from: previous) // meters
+            let segmentDistance = current.distance(from: previous)
             distanceTravelled += segmentDistance
         }
     }
@@ -63,9 +80,11 @@ extension LocationManager: CLLocationManagerDelegate {
                          didUpdateHeading newHeading: CLHeading) {
 
         // Use true heading when available, fallback to magnetic
-        compassHeading = newHeading.trueHeading > 0 ?
-                         newHeading.trueHeading :
-                         newHeading.magneticHeading
+        let heading = newHeading.trueHeading > 0
+            ? newHeading.trueHeading
+            : newHeading.magneticHeading
+
+        compassHeading = heading
     }
 
     func locationManagerShouldDisplayHeadingCalibration(_ manager: CLLocationManager) -> Bool {

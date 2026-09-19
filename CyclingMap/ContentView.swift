@@ -49,17 +49,18 @@ struct ContentView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                     }
 
-                    Spacer()
-
-                    Text(directionUp ? "Direction Up" : "North Up")
-                        .font(.system(size: 14, weight: .semibold))
-                        .padding(8)
-                        .background(.black.opacity(0.6))
-                        .foregroundColor(.white)
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                        .onTapGesture {
-                            directionUp.toggle()
-                        }
+  
+//                  Spacer()
+//
+//                    Text(directionUp ? "Direction Up" : "North Up")
+//                        .font(.system(size: 14, weight: .semibold))
+//                        .padding(8)
+//                        .background(.black.opacity(0.6))
+//                        .foregroundColor(.white)
+//                        .clipShape(RoundedRectangle(cornerRadius: 10))
+//                        .onTapGesture {
+//                            directionUp.toggle()
+//                        }
                 }
                 .padding(.top, 50)
                 .padding(.horizontal, 20)

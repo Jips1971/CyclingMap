@@ -10,9 +10,22 @@
 		000000000000000000000120 /* CyclingMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CyclingMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		1A612B62305D3C4100E979A5 /* Exceptions for "CyclingMap" folder in "CyclingMap" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 000000000000000100000000 /* CyclingMap */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		000000000000000000000010 /* CyclingMap */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				1A612B62305D3C4100E979A5 /* Exceptions for "CyclingMap" folder in "CyclingMap" target */,
+			);
 			path = CyclingMap;
 			sourceTree = "<group>";
 		};
@@ -262,6 +275,7 @@
 				ENABLE_RESOURCE_ACCESS_LOCATION = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CyclingMap/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Cycling App";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "“This app uses your location to show your cycling position and speed.”";
@@ -309,6 +323,7 @@
 				ENABLE_RESOURCE_ACCESS_LOCATION = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CyclingMap/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Cycling App";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "“This app uses your location to show your cycling position and speed.”";
